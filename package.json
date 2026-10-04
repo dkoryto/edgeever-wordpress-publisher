@@ -8,7 +8,7 @@
   "scripts": {
     "build": "bun run scripts/build.ts",
     "typecheck": "tsc --noEmit",
-    "test": "bun test tests",
+    "test": "bun run build && bun test tests",
     "test:e2e": "bash e2e/run.sh"
   },
   "dependencies": {

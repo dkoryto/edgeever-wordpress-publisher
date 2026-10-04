@@ -26,7 +26,7 @@ An [EdgeEver](https://github.com/tianma-if/edgeever) plugin that publishes the c
 ### Installation
 
 1. In EdgeEver, open the **Plugin Marketplace** page.
-2. Paste the repository URL, for example `https://github.com/<owner>/edgeever-wordpress-publisher`, and install.
+2. Paste the repository URL, for example `https://github.com/dkoryto/edgeever-wordpress-publisher`, and install.
 3. Confirm the community-plugin trust prompt and enable the plugin.
 
 ### Setup: create an Application Password
@@ -159,7 +159,7 @@ MIT. See [LICENSE](LICENSE).
 ### 安装
 
 1. 在 EdgeEver 中打开 **插件市场** 页面。
-2. 粘贴仓库地址，例如 `https://github.com/<owner>/edgeever-wordpress-publisher`，然后安装。
+2. 粘贴仓库地址，例如 `https://github.com/dkoryto/edgeever-wordpress-publisher`，然后安装。
 3. 确认社区插件信任提示，并启用插件。
 
 ### 配置：创建应用程序密码

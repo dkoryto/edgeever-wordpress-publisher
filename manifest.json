@@ -1,0 +1,109 @@
+{
+  "type": "plugin",
+  "id": "com.silevis.wordpress-publisher",
+  "name": "WordPress Publisher",
+  "version": "0.1.0",
+  "apiVersion": "2",
+  "settingsUi": "host",
+  "description": "Publish, update, or schedule the current note as a WordPress post, with images uploaded to the Media Library.",
+  "locales": {
+    "zh-CN": {
+      "name": "WordPress 发布",
+      "description": "将当前笔记发布、更新或定时发布为 WordPress 文章，并把图片上传到媒体库。"
+    }
+  },
+  "author": "Dariusz Koryto",
+  "entry": "./main.js",
+  "platforms": ["web", "desktop"],
+  "permissions": ["notes:read", "editor:read", "resources:read", "network", "storage", "ui:commands", "ui:notices", "ui:panels"],
+  "settings": {
+    "fields": [
+      {
+        "key": "site_url",
+        "type": "text",
+        "label": "WordPress site URL",
+        "description": "The address of your site, for example https://blog.example.com. HTTPS is required; http:// is accepted only for localhost.",
+        "placeholder": "https://blog.example.com",
+        "required": true,
+        "locales": {
+          "zh-CN": {
+            "label": "WordPress 站点网址",
+            "description": "站点地址，例如 https://blog.example.com。必须使用 HTTPS；仅 localhost 可使用 http://。"
+          }
+        }
+      },
+      {
+        "key": "username",
+        "type": "text",
+        "label": "WordPress username",
+        "required": true,
+        "locales": { "zh-CN": { "label": "WordPress 用户名" } }
+      },
+      {
+        "key": "application_password",
+        "type": "secret",
+        "label": "Application Password",
+        "description": "Create one in WordPress under Users → Profile → Application Passwords. Do not use your login password.",
+        "placeholder": "xxxx xxxx xxxx xxxx xxxx xxxx",
+        "required": true,
+        "locales": {
+          "zh-CN": {
+            "label": "应用程序密码",
+            "description": "在 WordPress 的“用户 → 个人资料 → 应用程序密码”中创建。请勿使用登录密码。"
+          }
+        }
+      },
+      {
+        "key": "default_status",
+        "type": "select",
+        "label": "Default post status",
+        "description": "Used by “Publish current note to WordPress”.",
+        "default": "draft",
+        "options": [
+          { "value": "draft", "label": "Draft" },
+          { "value": "publish", "label": "Published" }
+        ],
+        "locales": {
+          "zh-CN": {
+            "label": "默认文章状态",
+            "description": "用于“将当前笔记发布到 WordPress”命令。",
+            "options": { "draft": "草稿", "publish": "已发布" }
+          }
+        }
+      },
+      {
+        "key": "default_categories",
+        "type": "text",
+        "label": "Default categories",
+        "description": "Optional. Comma-separated category names or IDs. Missing names are created if your account may manage categories.",
+        "placeholder": "News, 12",
+        "locales": {
+          "zh-CN": {
+            "label": "默认分类",
+            "description": "可选。以逗号分隔的分类名称或 ID。若账号有权限，不存在的分类会自动创建。"
+          }
+        }
+      },
+      {
+        "key": "upload_images",
+        "type": "boolean",
+        "label": "Upload note images to the Media Library",
+        "description": "Images and attachments in the note are uploaded once and linked from the post.",
+        "default": true,
+        "locales": {
+          "zh-CN": {
+            "label": "将笔记图片上传到媒体库",
+            "description": "笔记中的图片和附件只上传一次，并在文章中引用。"
+          }
+        }
+      },
+      {
+        "key": "featured_image",
+        "type": "boolean",
+        "label": "Use the first image as the featured image",
+        "default": false,
+        "locales": { "zh-CN": { "label": "将第一张图片设为特色图片" } }
+      }
+    ]
+  }
+}

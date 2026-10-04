@@ -1,0 +1,5 @@
+node_modules/
+e2e/.data/
+*.log
+.DS_Store
+main.js

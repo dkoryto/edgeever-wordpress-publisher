@@ -142,7 +142,10 @@ const mountSchedulePanel = (context: PluginContext): Parameters<PluginContext["u
         error.textContent = t("error.pastDate");
         return;
       }
-      if (!noteId) return;
+      if (!noteId) {
+        error.textContent = t("notice.noNote");
+        return;
+      }
       submit.disabled = true;
       submit.textContent = t("panel.schedule.working");
       try {

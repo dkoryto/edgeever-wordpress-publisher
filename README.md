@@ -76,7 +76,7 @@ There are two ways to set the date:
    wordpress_date: 2026-10-12 09:30
    ```
 
-   Accepted formats: `2026-10-12`, `2026-10-12 09:30`, `2026-10-12T09:30:00`, with an optional offset (`Z`, `+02:00`). Without an offset, the date uses your device's time zone, and a date with no time means 09:00. When you run **Publish current note to WordPress**, a future date schedules the post, and a past date is used as the post date (backdating). **Save current note as WordPress draft** keeps the post as a draft but still sets its date. The property line is removed from the published content. The dialog also starts from this date when it is set.
+   Accepted formats: `2026-10-12`, `2026-10-12 09:30`, `2026-10-12T09:30:00`, with an optional offset (`Z`, `+02:00`). Without an offset, the date uses your device's time zone, and a date with no time means 09:00. When you run **Publish current note to WordPress**, a future date schedules the post, and a past date is used as the post date (backdating). **Save current note as WordPress draft** keeps the post as a draft but still sets its date. The property line is removed from the published content. Lines inside fenced code blocks (```` ``` ```` or `~~~`) are not read as properties and stay in the post. The dialog also starts from this date when it is set.
 
 You can also set `wordpress_categories: News, Releases` the same way to override the default categories for one note.
 
@@ -209,7 +209,7 @@ MIT. See [LICENSE](LICENSE).
    wordpress_date: 2026-10-12 09:30
    ```
 
-   支持的格式：`2026-10-12`、`2026-10-12 09:30`、`2026-10-12T09:30:00`，可附带时区偏移（`Z`、`+08:00`）。不带偏移时按本机时区计算；只写日期时默认为 09:00。运行“将当前笔记发布到 WordPress”时，将来的时间会定时发布，过去的时间则作为文章日期（补发）。“保存为草稿”仍保持草稿状态，但同样会设置文章日期。这一行不会出现在发布的内容中。设置了该属性时，对话框也会以它作为初始时间。
+   支持的格式：`2026-10-12`、`2026-10-12 09:30`、`2026-10-12T09:30:00`，可附带时区偏移（`Z`、`+08:00`）。不带偏移时按本机时区计算；只写日期时默认为 09:00。运行“将当前笔记发布到 WordPress”时，将来的时间会定时发布，过去的时间则作为文章日期（补发）。“保存为草稿”仍保持草稿状态，但同样会设置文章日期。这一行不会出现在发布的内容中。代码块（```` ``` ```` 或 `~~~`）中的同名行不会被当作属性，会原样保留在文章中。设置了该属性时，对话框也会以它作为初始时间。
 
 同样可以写 `wordpress_categories: 新闻, 发布` 来为单篇笔记指定分类，覆盖默认分类。
 

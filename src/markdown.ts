@@ -20,7 +20,8 @@ const PROPERTY_KEYS: Record<string, keyof NoteProperties> = {
 };
 
 // EdgeEver's Markdown serializer may escape underscores (`wordpress\_date`).
-const PROPERTY_LINE = /^[ \t]*(wordpress\\?_(?:date|categories))[ \t]*:[ \t]*(.*?)[ \t]*$/gim;
+const PROPERTY_LINE = /^[ \t]*(wordpress\\?_(?:date|categories))[ \t]*:[ \t]*(.*?)[ \t]*$/i;
+const CODE_FENCE = /^[ \t]{0,3}(`{3,}|~{3,})/;
 const FRONTMATTER = /^﻿?---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
 
 const unquote = (value: string) => value.replace(/^(["'])(.*)\1$/, "$2").trim();
@@ -54,11 +55,26 @@ export const extractProperties = (markdown: string): { markdown: string; propert
     }
   }
 
-  body = body.replace(PROPERTY_LINE, (_line, rawKey: string, value: string) => {
-    const key = PROPERTY_KEYS[rawKey.replace("\\", "").toLowerCase()];
-    if (key && properties[key] === undefined) properties[key] = unquote(value);
-    return "";
-  });
+  // Property lines inside fenced code blocks are note content, not settings.
+  let fence: string | null = null;
+  body = body
+    .split("\n")
+    .map((line) => {
+      const fenceMatch = line.match(CODE_FENCE);
+      if (fenceMatch) {
+        const marker = fenceMatch[1];
+        if (fence === null) fence = marker;
+        else if (marker[0] === fence[0] && marker.length >= fence.length) fence = null;
+        return line;
+      }
+      if (fence !== null) return line;
+      const match = line.replace(/\r$/, "").match(PROPERTY_LINE);
+      if (!match) return line;
+      const key = PROPERTY_KEYS[match[1].replace("\\", "").toLowerCase()];
+      if (key && properties[key] === undefined) properties[key] = unquote(match[2]);
+      return "";
+    })
+    .join("\n");
 
   return { markdown: body.replace(/^\s*\n/, ""), properties };
 };
@@ -122,7 +138,8 @@ export const collectResourceReferences = (markdown: string): ResourceReference[]
 const escapeHtml = (value: string) =>
   value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-const SAFE_URL = /^(?:https?:|mailto:|tel:|#|\/(?!\/)|\.{0,2}\/|[^:/?#]+(?:[/?#]|$))/i;
+// `//host` links are rejected: they point to another site with the page's scheme.
+const SAFE_URL = /^(?:https?:|mailto:|tel:|#|\/(?!\/)|\.{1,2}\/|[^:/?#]+(?:[/?#]|$))/i;
 
 /** Allows http(s), mailto, tel, fragments and relative URLs; rejects javascript:, data:, etc. */
 export const isSafeUrl = (href: string) => {

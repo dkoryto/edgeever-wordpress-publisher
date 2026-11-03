@@ -99,6 +99,20 @@ describe("note properties", () => {
     expect(markdown).toContain("More");
   });
 
+  test("ignores property lines inside fenced code blocks", () => {
+    const source = "Example:\n\n```yaml\nwordpress_date: 2026-12-24\n```\n\n~~~\nwordpress_categories: News\n~~~";
+    const { markdown, properties } = extractProperties(source);
+    expect(properties).toEqual({});
+    expect(markdown).toBe(source);
+  });
+
+  test("still reads property lines after a closed code block", () => {
+    const { markdown, properties } = extractProperties("```\ncode\n```\n\nwordpress_date: 2026-12-24\n\nBody");
+    expect(properties.date).toBe("2026-12-24");
+    expect(markdown).not.toContain("wordpress_date");
+    expect(markdown).toContain("code");
+  });
+
   test("leaves a thematic break that is not front matter alone", () => {
     const source = "---\nJust a paragraph between rules.\n---\nText";
     expect(extractProperties(source).markdown).toBe(source);
@@ -114,5 +128,5 @@ describe("note properties", () => {
 
 test("isSafeUrl", () => {
   for (const ok of ["https://a.b", "http://a.b", "mailto:x@y.z", "#top", "/path", "page.html", "../up"]) expect(isSafeUrl(ok)).toBe(true);
-  for (const bad of ["javascript:alert(1)", " JaVaScRiPt:alert(1)", "java\nscript:alert(1)", "data:text/html,x", "vbscript:x", ""]) expect(isSafeUrl(bad)).toBe(false);
+  for (const bad of ["javascript:alert(1)", " JaVaScRiPt:alert(1)", "java\nscript:alert(1)", "data:text/html,x", "vbscript:x", "", "//evil.example", " //evil.example"]) expect(isSafeUrl(bad)).toBe(false);
 });

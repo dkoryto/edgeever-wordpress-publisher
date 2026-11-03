@@ -215,6 +215,19 @@ const resolveSchedule = (mode: PublishMode, propertyDate: string | undefined, no
   return parsed;
 };
 
+const KNOWN_STATUSES: readonly PostStatus[] = ["draft", "publish", "future", "pending", "private"];
+
+/** Current status of a remembered post, or null if it no longer exists or is in the trash. */
+const getRemoteStatus = async (client: WordPressClient, postId: number): Promise<PostStatus | null> => {
+  try {
+    const post = await client.getPost(postId);
+    return KNOWN_STATUSES.includes(post.status) ? post.status : null;
+  } catch (error) {
+    if (error instanceof WordPressError && (error.status === 404 || error.status === 410)) return null;
+    throw error;
+  }
+};
+
 /**
  * Publishes one note. The note is created on first publish and updated on later
  * publishes (tracked per site in plugin storage); if the remembered post was
@@ -247,9 +260,17 @@ export const publishNote = async (
 
   const key = postStorageKey(client.siteUrl, note.id);
   const existing = await context.storage.get<PostLink>(key);
-  // Publishing a previously scheduled post without a date means "publish now";
-  // otherwise WordPress would keep the old future date and the post stays scheduled.
-  const effectiveDate = scheduledDate ?? (status === "publish" && existing?.status === "future" ? now : null);
+  // The stored status can be out of date: the post may have been published in
+  // wp-admin, or WordPress may have already published a scheduled post.
+  const remoteStatus = existing ? await getRemoteStatus(client, existing.postId) : null;
+
+  // With "Draft" as the default status, the publish command must not take a
+  // post that is already live, scheduled or pending back to draft.
+  if (mode.kind === "default" && status === "draft" && remoteStatus && remoteStatus !== "draft") status = remoteStatus;
+
+  // Publishing a scheduled post without a date means "publish now"; otherwise
+  // WordPress keeps the old future date and the post stays scheduled.
+  const effectiveDate = scheduledDate ?? (status === "publish" && remoteStatus === "future" ? now : null);
 
   const payload: PostPayload = {
     title: prepared.title,
@@ -262,7 +283,7 @@ export const publishNote = async (
 
   let post: WordPressPost;
   let action: PublishResult["action"];
-  if (existing && existing.siteUrl === client.siteUrl) {
+  if (existing) {
     try {
       post = await client.updatePost(existing.postId, payload);
       action = "updated";

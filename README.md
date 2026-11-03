@@ -56,7 +56,7 @@ If the Application Passwords section is missing, your site may have turned the f
 
 | Command | What it does |
 | --- | --- |
-| **Publish current note to WordPress** | Creates or updates the post using the *Default post status* setting. If the note has a future `wordpress_date`, the post is scheduled instead. |
+| **Publish current note to WordPress** | Creates or updates the post using the *Default post status* setting. If the note has a future `wordpress_date`, the post is scheduled instead. A post that is already published, scheduled or pending in WordPress keeps that status when the default is *Draft*. |
 | **Save current note as WordPress draft** | Creates or updates the post as a draft. A post that was already published goes back to draft. |
 | **Schedule current note…** | Opens a dialog to pick a date and time (your local time), then creates or updates the post with status *Scheduled* (`future`). |
 | **Test WordPress connection** | Checks the URL and credentials. |
@@ -189,7 +189,7 @@ MIT. See [LICENSE](LICENSE).
 
 | 命令 | 作用 |
 | --- | --- |
-| **将当前笔记发布到 WordPress** | 按“默认文章状态”创建或更新文章。如果笔记中设置了将来的 `wordpress_date`，则改为定时发布。 |
+| **将当前笔记发布到 WordPress** | 按“默认文章状态”创建或更新文章。如果笔记中设置了将来的 `wordpress_date`，则改为定时发布。默认状态为“草稿”时，WordPress 中已发布、已定时或待审核的文章会保持原状态。 |
 | **将当前笔记保存为 WordPress 草稿** | 以草稿形式创建或更新文章。已发布的文章会变回草稿。 |
 | **定时发布当前笔记…** | 打开对话框选择日期和时间（本地时间），然后以“已定时”（`future`）状态创建或更新文章。 |
 | **测试 WordPress 连接** | 检查网址和凭据。 |

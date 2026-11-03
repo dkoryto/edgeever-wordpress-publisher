@@ -129,6 +129,32 @@ describe("publishNote", () => {
     expect(wp.posts.get(draft.postId)).toMatchObject({ status: "draft", date_gmt: "2026-12-24T18:00:00" });
   });
 
+  test("publish with a draft default does not take a live post back to draft", async () => {
+    const { wp, context } = setup({ default_status: "draft" });
+    const first = await publishNote(context, NOTE, { kind: "default" });
+    wp.posts.get(first.postId)!.status = "publish";
+    const second = await publishNote(context, NOTE, { kind: "default" });
+    expect(second).toMatchObject({ postId: first.postId, action: "updated", status: "publish" });
+    expect(wp.posts.get(first.postId)!.status).toBe("publish");
+  });
+
+  test("Save as draft still takes a live post back to draft", async () => {
+    const { wp, context } = setup({ default_status: "publish" });
+    const first = await publishNote(context, NOTE, { kind: "default" });
+    const draft = await publishNote(context, NOTE, { kind: "draft" });
+    expect(draft.status).toBe("draft");
+    expect(wp.posts.get(first.postId)!.status).toBe("draft");
+  });
+
+  test("keeps the original date of a scheduled post that WordPress has already published", async () => {
+    const { wp, context } = setup({ default_status: "publish" });
+    const now = new Date("2026-10-05T10:00:00Z");
+    const scheduled = await publishNote(context, NOTE, { kind: "schedule", date: new Date("2026-10-12T07:30:00Z") }, { now });
+    wp.posts.get(scheduled.postId)!.status = "publish";
+    await publishNote(context, NOTE, { kind: "default" }, { now: new Date("2026-10-20T08:00:00Z") });
+    expect(wp.posts.get(scheduled.postId)).toMatchObject({ status: "publish", date_gmt: "2026-10-12T07:30:00" });
+  });
+
   test("keeps going when an image fails and reports it", async () => {
     const { wp, context } = setup();
     const note = { ...NOTE, contentMarkdown: `${NOTE.contentMarkdown}\n![Missing](/api/v1/resources/res_missing/blob)` };

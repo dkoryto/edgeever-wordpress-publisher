@@ -35,6 +35,11 @@ if (!/export\s*\{[^}]*\bas default\b|export default/.test(output)) {
 const size = statSync("main.js").size;
 if (size > 5 * 1024 * 1024) throw new Error(`main.js is ${size} bytes; EdgeEver allows at most 5 MB.`);
 
+// EdgeEver fails to install a pinned release that has no styles.css asset.
+const stylesSize = statSync("styles.css", { throwIfNoEntry: false })?.size;
+if (stylesSize === undefined) throw new Error("styles.css is missing; every release must include it.");
+if (stylesSize > 1024 * 1024) throw new Error(`styles.css is ${stylesSize} bytes; EdgeEver allows at most 1 MB.`);
+
 const manifest = JSON.parse(readFileSync("manifest.json", "utf8"));
 const pkg = JSON.parse(readFileSync("package.json", "utf8"));
 if (manifest.version !== pkg.version) {

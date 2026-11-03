@@ -1,0 +1,8 @@
+/*
+ * WordPress Publisher stylesheet.
+ *
+ * The schedule dialog is styled inline in main.js, so no rules are needed here.
+ * The file is still shipped with every release: EdgeEver downloads styles.css
+ * when it installs a plugin from a pinned release, and the install fails if the
+ * release does not contain it.
+ */

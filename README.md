@@ -128,7 +128,7 @@ bun run test:e2e    # needs Docker: real WordPress + MariaDB on 127.0.0.1:8089
 EdgeEver installs GitHub plugins from the default branch's `manifest.json` and the matching GitHub Release.
 
 1. Bump `version` in both `package.json` and `manifest.json`. The build fails if they differ. Commit to the default branch.
-2. Push a tag `X.Y.Z` or `vX.Y.Z`. `.github/workflows/release.yml` tests, builds and attaches `manifest.json` and `main.js` to the Release.
+2. Push a tag `X.Y.Z` or `vX.Y.Z`. `.github/workflows/release.yml` tests, builds and attaches `manifest.json`, `main.js` and `styles.css` to the Release. All three files are required: EdgeEver cannot install a release without `styles.css`.
 3. The Release `manifest.json` must match the default-branch file exactly, so do not edit the manifest after tagging.
 
 Bundled third-party code: [marked](https://github.com/markedjs/marked) (MIT). Its license notice is kept at the top of `main.js`.
@@ -256,7 +256,7 @@ bun run test:e2e    # 需要 Docker：在 127.0.0.1:8089 启动真实的 WordPre
 EdgeEver 从默认分支的 `manifest.json` 和对应的 GitHub Release 安装 GitHub 插件。
 
 1. 同时修改 `package.json` 和 `manifest.json` 中的 `version`（两者不一致时构建会失败），并提交到默认分支。
-2. 推送 `X.Y.Z` 或 `vX.Y.Z` 标签。`.github/workflows/release.yml` 会运行测试、构建，并把 `manifest.json` 和 `main.js` 上传到 Release。
+2. 推送 `X.Y.Z` 或 `vX.Y.Z` 标签。`.github/workflows/release.yml` 会运行测试、构建，并把 `manifest.json`、`main.js` 和 `styles.css` 上传到 Release。三个文件都必须存在：缺少 `styles.css` 时 EdgeEver 无法安装该版本。
 3. Release 中的 `manifest.json` 必须与默认分支上的完全一致，打标签后不要再修改 manifest。
 
 内置的第三方代码：[marked](https://github.com/markedjs/marked)（MIT），其许可声明保留在 `main.js` 开头。

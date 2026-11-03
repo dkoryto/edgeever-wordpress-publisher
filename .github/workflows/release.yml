@@ -2,7 +2,8 @@ name: Release
 
 # Push a tag that matches manifest.json "version" (for example 0.1.0 or v0.1.0)
 # from the default branch. The workflow tests, builds main.js and publishes a
-# GitHub Release with the two assets EdgeEver installs: manifest.json and main.js.
+# GitHub Release with the three assets EdgeEver installs: manifest.json, main.js
+# and styles.css.
 on:
   push:
     tags:
@@ -46,7 +47,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" manifest.json main.js \
+          gh release create "$GITHUB_REF_NAME" manifest.json main.js styles.css \
             --title "WordPress Publisher $GITHUB_REF_NAME" \
             --notes "Install in EdgeEver from the Plugin Marketplace page by pasting https://github.com/${GITHUB_REPOSITORY}" \
             --verify-tag

@@ -2,7 +2,7 @@
   "type": "plugin",
   "id": "com.silevis.wordpress-publisher",
   "name": "WordPress Publisher",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "apiVersion": "2",
   "settingsUi": "host",
   "description": "Publish, update, or schedule the current note as a WordPress post, with images uploaded to the Media Library.",

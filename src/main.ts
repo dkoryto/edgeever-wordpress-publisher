@@ -55,15 +55,26 @@ const siteForMessages = async (context: PluginContext) => {
   }
 };
 
+/** Notes with a publish in progress. A second run would create a duplicate post. */
+const publishing = new Set<string>();
+
 const runPublish = async (context: PluginContext, note: EdgeEverNote, mode: PublishMode) => {
+  const title = note.title?.trim() || "Untitled";
+  if (publishing.has(note.id)) {
+    context.ui.showNotice(t("notice.busy", { title }));
+    return false;
+  }
+  publishing.add(note.id);
   try {
-    context.ui.showNotice(t("notice.working", { title: note.title?.trim() || "Untitled" }));
+    context.ui.showNotice(t("notice.working", { title }));
     const result = await publishNote(context, note, mode);
     context.ui.showNotice(describeResult(result));
     return true;
   } catch (error) {
     context.ui.showNotice(describeError(error, await siteForMessages(context)));
     return false;
+  } finally {
+    publishing.delete(note.id);
   }
 };
 

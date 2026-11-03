@@ -1,6 +1,6 @@
 {
   "name": "edgeever-wordpress-publisher",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "EdgeEver plugin that publishes notes to WordPress through the REST API.",
   "type": "module",

@@ -56,6 +56,18 @@ describe("plugin entry", () => {
     expect(notices.at(-1)).toContain(`https://blog.example.com/?p=${post.id}`);
   });
 
+  test("ignores a second publish of the same note while the first is running", async () => {
+    const { context, commands, notices, wp } = createPluginContext();
+    await plugin.activate(context);
+    const publish = commands.get("publish-note")!;
+    await Promise.all([publish(), publish()]);
+    expect(wp.posts.size).toBe(1);
+    expect(notices).toContain("“Title” is already being sent to WordPress. Wait until it finishes.");
+    await publish();
+    expect(wp.posts.size).toBe(1);
+    expect(notices.at(-1)).toContain("Updated WordPress post");
+  });
+
   test("asks for an open note", async () => {
     const { context, commands, notices } = createPluginContext({ openNote: false });
     await plugin.activate(context);

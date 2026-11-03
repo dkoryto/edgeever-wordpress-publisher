@@ -1,6 +1,6 @@
 # WordPress Publisher for EdgeEver
 
-[English](#english) · [简体中文](#简体中文)
+[English](#english) · [Polski](#polski) · [简体中文](#简体中文)
 
 An [EdgeEver](https://github.com/tianma-if/edgeever) plugin that publishes the current note to a WordPress site through the WordPress REST API. It can save drafts, publish, schedule, and update the same post when you publish again. Note images are uploaded to the WordPress Media Library. (Upstream request: tianma-if/edgeever#105.)
 
@@ -136,6 +136,153 @@ Bundled third-party code: [marked](https://github.com/markedjs/marked) (MIT). It
 ### License
 
 MIT. See [LICENSE](LICENSE).
+
+---
+
+## Polski
+
+Plugin do [EdgeEver](https://github.com/tianma-if/edgeever), który publikuje bieżącą notatkę na stronie WordPress przez WordPress REST API. Pozwala zapisać szkic, opublikować lub zaplanować wpis, a przy kolejnej publikacji aktualizuje ten sam wpis. Obrazy z notatki trafiają do biblioteki mediów WordPressa.
+
+Interfejs pluginu (nazwy komend, komunikaty) jest dostępny po angielsku i chińsku. Poniżej nazwy komend podano w wersji angielskiej, tak jak widać je w EdgeEver.
+
+### Funkcje
+
+- **Publikacja, szkic lub harmonogram** dla notatki otwartej w edytorze, łącznie z niezapisanymi zmianami.
+- **Aktualizacja zamiast duplikatów.** Plugin pamięta, który wpis WordPressa należy do danej notatki (osobno dla każdej strony). Kolejna publikacja aktualizuje ten wpis. Jeśli wpis usunięto w WordPressie, plugin tworzy nowy.
+- **Obrazy w bibliotece mediów.** Obrazy (i podlinkowane załączniki) zapisane w EdgeEver są wysyłane raz, a wpis odwołuje się do ich kopii w WordPressie. Niezmienione obrazy są używane ponownie.
+- **Markdown na HTML** przez [marked](https://marked.js.org/) (GFM: tabele, listy zadań, przekreślenia). Surowy HTML w notatce jest pokazywany jako tekst, z wyjątkiem prostych tagów formatowania (`<u>`, `<mark>`, `<sub>`, `<sup>`, `<kbd>`, `<details>`…). Plugin nigdy nie wysyła skryptów, atrybutów zdarzeń ani ramek iframe. Linki `javascript:`, `data:` i `//host` są usuwane.
+- Nagłówek `# Tytuł` na początku notatki, który powtarza tytuł, jest pomijany, bo WordPress sam wyświetla tytuł.
+- Opcjonalne domyślne kategorie i możliwość ustawienia pierwszego obrazu jako obrazka wyróżniającego.
+
+### Wymagania
+
+- EdgeEver w wersji Web lub desktop z obsługą pluginów (plugin API v2). Aplikacje na Androida i iOS nie uruchamiają pluginów.
+- WordPress 5.6 lub nowszy (z wbudowanymi hasłami aplikacji) dostępny przez **HTTPS**. Adres `http://` jest dozwolony tylko dla `localhost`.
+- Konto WordPress z prawem publikowania wpisów i wysyłania mediów (np. rola Autor, Redaktor lub Administrator).
+
+### Instalacja
+
+1. W EdgeEver otwórz stronę **Plugin Marketplace**.
+2. Wklej adres repozytorium, np. `https://github.com/dkoryto/edgeever-wordpress-publisher`, i zainstaluj plugin.
+3. Potwierdź komunikat o zaufaniu do pluginu społeczności i włącz plugin.
+
+Jeśli instalacja kończy się błędem `Could not download styles.css from your EdgeEver instance`, zainstalowana wersja nie ma pliku `styles.css` w wydaniu na GitHubie. Problem dotyczy wersji 0.1.0 i jest naprawiony od wersji 0.1.1.
+
+### Konfiguracja: hasło aplikacji
+
+Hasło aplikacji pozwala pluginowi logować się do WordPressa bez Twojego właściwego hasła. Możesz je w każdej chwili unieważnić.
+
+1. Zaloguj się do panelu WordPressa i otwórz **Użytkownicy → Profil** (lub **Użytkownicy → Wszyscy użytkownicy → Twoje konto**).
+2. Przewiń do sekcji **Hasła aplikacji**, wpisz nazwę, np. `EdgeEver`, i kliknij **Dodaj nowe hasło aplikacji**.
+3. Skopiuj wygenerowane hasło (wygląda jak `abcd EFGH 1234 ijkl MNOP 5678`). WordPress pokazuje je tylko raz. Spacje są opcjonalne.
+4. W EdgeEver otwórz **Ustawienia** pluginu i uzupełnij pola:
+
+| Ustawienie | Opis |
+| --- | --- |
+| WordPress site URL | Np. `https://blog.example.com`. Jeśli WordPress działa w podkatalogu, podaj go (`https://example.com/blog`). |
+| WordPress username | Login konta, do którego należy hasło aplikacji. |
+| Application Password | Hasło z kroku 3. Jest przechowywane w zaszyfrowanym, lokalnym magazynie sekretów EdgeEver. |
+| Default post status | `Draft` (domyślnie) lub `Published`. Używane przez komendę **Publish current note to WordPress**. |
+| Default categories | Opcjonalne nazwy lub ID kategorii rozdzielone przecinkami, np. `Aktualności, 12`. Jeśli kategoria o danej nazwie nie istnieje, a konto może zarządzać kategoriami, plugin ją utworzy. Wartość złożona z samych cyfr jest traktowana jako ID. |
+| Upload note images to the Media Library | Domyślnie włączone. Po wyłączeniu obrazy nie trafiają do wpisu (zostaje ich tekst alternatywny). |
+| Use the first image as the featured image | Domyślnie wyłączone. |
+
+5. Uruchom **Test WordPress connection**. Komenda wywołuje `GET /wp-json/wp/v2/users/me` i pokazuje zalogowanego użytkownika.
+
+Jeśli w profilu nie ma sekcji haseł aplikacji, funkcja mogła zostać wyłączona (robią to niektóre wtyczki bezpieczeństwa) albo strona nie działa przez HTTPS.
+
+### Komendy
+
+| Komenda | Działanie |
+| --- | --- |
+| **Publish current note to WordPress** | Tworzy lub aktualizuje wpis ze statusem z ustawienia *Default post status*. Jeśli notatka ma przyszłą datę `wordpress_date`, wpis zostaje zaplanowany. Gdy domyślny status to *Draft*, wpis już opublikowany, zaplanowany lub oczekujący na przegląd w WordPressie zachowuje swój status. |
+| **Save current note as WordPress draft** | Tworzy lub aktualizuje wpis jako szkic. Opublikowany wpis wraca do szkicu. |
+| **Schedule current note…** | Otwiera okno wyboru daty i godziny (czas lokalny), a potem tworzy lub aktualizuje wpis ze statusem *Zaplanowany* (`future`). |
+| **Test WordPress connection** | Sprawdza adres strony i dane logowania. |
+
+Każda komenda pokazuje komunikat z wynikiem i linkiem do wpisu. Jeśli obrazu lub załącznika nie da się wysłać, plugin kontynuuje publikację, a komunikat podaje, ile plików pominięto. Ponowne uruchomienie publikacji tej samej notatki, zanim poprzednia się skończy, jest ignorowane, żeby nie powstał drugi wpis.
+
+### Harmonogram
+
+Harmonogram korzysta z wbudowanych zaplanowanych wpisów WordPressa (`status: "future"` z `date_gmt`). Po zaplanowaniu **WordPress sam opublikuje wpis o wskazanej porze, także gdy EdgeEver jest zamknięty**. Plugin nie używa harmonogramów pluginów EdgeEver, bo działają one tylko wtedy, gdy aplikacja desktopowa jest otwarta na jednym urządzeniu.
+
+Datę można ustawić na dwa sposoby:
+
+1. **Schedule current note…**: wybierz datę i godzinę w oknie.
+2. **Właściwość w notatce**: dodaj osobną linię w dowolnym miejscu notatki albo wpisz ją we front matter na początku:
+
+   ```text
+   wordpress_date: 2026-10-12 09:30
+   ```
+
+   Obsługiwane formaty: `2026-10-12`, `2026-10-12 09:30`, `2026-10-12T09:30:00`, opcjonalnie ze strefą czasową (`Z`, `+02:00`). Bez strefy używana jest strefa czasowa urządzenia, a data bez godziny oznacza 09:00. Przy komendzie **Publish current note to WordPress** przyszła data planuje wpis, a przeszła data staje się datą wpisu (publikacja wsteczna). **Save current note as WordPress draft** zostawia szkic, ale też ustawia datę. Linia z właściwością nie trafia do opublikowanej treści. Linie w blokach kodu (```` ``` ```` lub `~~~`) nie są czytane jako właściwości i zostają we wpisie. Okno harmonogramu też zaczyna od tej daty, jeśli jest ustawiona.
+
+W ten sam sposób możesz dodać `wordpress_categories: Aktualności, Wydania`, aby zmienić kategorie tylko dla jednej notatki.
+
+### Śledzenie aktualizacji
+
+Plugin zapisuje powiązanie `ID notatki + adres strony → ID wpisu` w magazynie pluginu EdgeEver. Ten magazyn jest lokalny dla urządzenia i przestrzeni roboczej, więc publikacja tej samej notatki z innego urządzenia utworzy osobny wpis. Zmiana adresu strony rozpoczyna nowy zestaw wpisów. Przed aktualizacją plugin sprawdza w WordPressie aktualny status wpisu. Wysłane obrazy są zapamiętywane po ID zasobu i skrócie treści, a przed ponownym użyciem plugin sprawdza, czy nadal istnieją.
+
+### Prywatność i dostęp do sieci
+
+Plugin wysyła tytuł notatki, treść HTML, użyte obrazy i załączniki oraz dane logowania wyłącznie do skonfigurowanej strony WordPress. Nie korzysta z żadnej innej usługi. Żądania są wysyłane z `credentials: "omit"`, więc ciasteczka przeglądarki nigdy nie służą do uwierzytelniania.
+
+W wersji **Web** żądania wychodzą z przeglądarki, więc strona WordPress musi zezwalać na żądania REST z innych domen (CORS). WordPress domyślnie na to pozwala, łącznie z nagłówkiem `Authorization`. Niektóre wtyczki bezpieczeństwa, CDN-y lub serwery proxy blokują takie żądania albo usuwają nagłówek `Authorization`. Aplikacja desktopowa nie ma tego ograniczenia.
+
+### Zadeklarowane uprawnienia
+
+`notes:read`, `editor:read`, `resources:read`, `network`, `storage`, `ui:commands`, `ui:notices`, `ui:panels`. W EdgeEver te deklaracje opisują, z czego korzysta plugin. Nie są piaskownicą.
+
+### Ograniczenia
+
+- Publikowana jest jedna notatka naraz, ta otwarta w edytorze. Nie ma publikacji zbiorczej.
+- Brak synchronizacji w obie strony. Zmiany wprowadzone w WordPressie zostaną nadpisane przy kolejnej publikacji z EdgeEver.
+- Notatki są zamieniane na klasyczny HTML, nie na bloki Gutenberga. WordPress pokazuje treść w bloku *Klasyczny*, który można przekonwertować na bloki w edytorze.
+- Na razie brak obsługi tagów, zajawek, slugów, własnych typów wpisów i formatów wpisów.
+- Wysyłane są tylko obrazy i załączniki zapisane w tej przestrzeni roboczej EdgeEver. Zewnętrzne adresy obrazów zostają bez zmian. WordPress może odrzucić niektóre typy załączników (np. `.zip`), zależnie od ustawień wysyłania. Takie pliki są liczone w komunikacie jako nieudane.
+- Osadzenia pluginów EdgeEver (rysunki itp.) są pomijane, bo działają tylko w EdgeEver.
+- EdgeEver nie wyświetla front matter YAML w specjalny sposób. W edytorze najpewniejsza jest osobna linia `wordpress_date: …`.
+- Ustawienia, hasło aplikacji i mapa notatka → wpis są zapisane na urządzeniu. Nie synchronizują się.
+- Komunikaty są zwykłym tekstem, więc link do wpisu jest widoczny, ale może nie być klikalny.
+
+### Rozwój
+
+```sh
+bun install
+bun run typecheck
+bun run test        # testy jednostkowe (bun:test)
+bun run build       # tworzy main.js (pojedynczy plik ESM bez importów)
+bun run test:e2e    # wymaga Dockera: WordPress + MariaDB na 127.0.0.1:8089
+```
+
+- `src/markdown.ts`: właściwości notatki, Markdown na HTML, podmiana adresów zasobów.
+- `src/wordpress.ts`: klient REST (Basic auth z hasłem aplikacji, klasyfikacja błędów, tryb `?rest_route=` dla stron bez przyjaznych bezpośrednich odnośników).
+- `src/publisher.ts`: logika publikacji używana przez komendy (wysyłanie mediów, kategorie, tworzenie, aktualizacja i ponowne tworzenie wpisu).
+- `src/main.ts`: punkt wejścia pluginu (komendy, okno harmonogramu, komunikaty po angielsku i chińsku).
+- `src/types.ts`: minimalne typy kontekstu pluginu EdgeEver na podstawie publicznej dokumentacji API.
+- `styles.css`: pusty arkusz stylów. Okno harmonogramu ma style inline, ale plik musi być w każdym wydaniu.
+- `e2e/`: `run.sh` uruchamia `wordpress:latest` i `mariadb:11` przez Docker Compose, instaluje WordPressa przez `wordpress:cli`, tworzy hasło aplikacji i uruchamia `wordpress.e2e.ts`. Test sprawdza publikację na prawdziwym WordPressie, raz ze zwykłymi, raz z przyjaznymi odnośnikami, a potem usuwa kontenery i dane. `KEEP_WORDPRESS=1` zostawia stronę uruchomioną, a `WP_PORT` zmienia port.
+
+### Wydawanie wersji
+
+EdgeEver instaluje pluginy z GitHuba na podstawie `manifest.json` z domyślnej gałęzi i pasującego wydania (GitHub Release).
+
+1. Zmień `version` w `package.json` i `manifest.json`. Build kończy się błędem, jeśli wersje się różnią. Zatwierdź zmianę na domyślnej gałęzi.
+2. Wypchnij tag `X.Y.Z` lub `vX.Y.Z`. `.github/workflows/release.yml` sprawdza, czy tag wskazuje commit z domyślnej gałęzi, uruchamia testy, buduje plugin i dołącza do wydania `manifest.json`, `main.js` oraz `styles.css`. Wszystkie trzy pliki są wymagane: bez `styles.css` EdgeEver nie zainstaluje wydania.
+3. `manifest.json` w wydaniu musi być identyczny z plikiem na domyślnej gałęzi, więc nie zmieniaj manifestu po utworzeniu tagu.
+
+### Historia zmian
+
+- **0.1.7**: Polski opis w dokumentacji.
+- **0.1.6**: Okno harmonogramu pokazuje błąd, gdy nie ma powiązanej notatki, zamiast nic nie robić.
+- **0.1.5**: Stałe wersje Bun w CI i przy wydaniach. Wydanie można utworzyć tylko z tagu na domyślnej gałęzi.
+- **0.1.4**: Linie `wordpress_date` i `wordpress_categories` w blokach kodu nie są już traktowane jako właściwości. Linki `//host` są usuwane z treści.
+- **0.1.3**: Dwukrotne uruchomienie publikacji tej samej notatki nie tworzy już dwóch wpisów.
+- **0.1.2**: Komenda publikacji z domyślnym statusem *Draft* nie cofa już opublikowanego wpisu do szkicu. Ponowna publikacja wpisu, który WordPress już opublikował z harmonogramu, nie zmienia jego daty.
+- **0.1.1**: Każde wydanie zawiera `styles.css`. Naprawia błąd instalacji `Could not download styles.css from your EdgeEver instance`.
+- **0.1.0**: Pierwsze wydanie.
+
+Kod zewnętrzny w paczce: [marked](https://github.com/markedjs/marked) (MIT). Jego informacja licencyjna znajduje się na początku `main.js`.
 
 ---
 

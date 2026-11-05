@@ -19,7 +19,7 @@ const createPluginContext = (options: { openNote?: boolean; password?: string } 
   const markdown = "# Title\n\nLive ![x](/api/v1/resources/res_img/blob)";
   const context: PluginContext = {
     ...core,
-    pluginId: "com.silevis.wordpress-publisher",
+    pluginId: "wordpress-publisher",
     notes: { get: async (id) => ({ id, title: "Title", contentMarkdown: "stale" }) },
     editor: { getDocument: async () => (options.openNote === false ? null : { noteId: "note_1", contentMarkdown: markdown, hasUnsavedChanges: true }) },
     commands: { register: (command) => { commands.set(command.id, command.run); return () => commands.delete(command.id); } },

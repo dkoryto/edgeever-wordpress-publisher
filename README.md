@@ -29,6 +29,8 @@ An [EdgeEver](https://github.com/tianma-if/edgeever) plugin that publishes the c
 2. Paste the repository URL, for example `https://github.com/dkoryto/edgeever-wordpress-publisher`, and install.
 3. Confirm the community-plugin trust prompt and enable the plugin.
 
+Upgrading from 0.1.7 or earlier: the plugin ID changed from `com.silevis.wordpress-publisher` to `wordpress-publisher` in 0.1.8, so EdgeEver treats it as a new plugin. Uninstall the old version, install 0.1.8 and enter the settings again. Notes published with the old version are not linked to their posts any more; publishing them again creates new posts.
+
 ### Setup: create an Application Password
 
 Application Passwords let the plugin sign in to WordPress without your real password, and you can revoke them at any time.
@@ -166,6 +168,8 @@ Interfejs pluginu (nazwy komend, komunikaty) jest dostępny po angielsku i chiń
 2. Wklej adres repozytorium, np. `https://github.com/dkoryto/edgeever-wordpress-publisher`, i zainstaluj plugin.
 3. Potwierdź komunikat o zaufaniu do pluginu społeczności i włącz plugin.
 
+Aktualizacja z wersji 0.1.7 lub starszej: w wersji 0.1.8 ID pluginu zmieniło się z `com.silevis.wordpress-publisher` na `wordpress-publisher`, więc EdgeEver traktuje go jak nowy plugin. Odinstaluj starą wersję, zainstaluj 0.1.8 i wpisz ustawienia ponownie. Notatki opublikowane starą wersją nie są już powiązane z postami; ich ponowna publikacja utworzy nowe posty.
+
 Jeśli instalacja kończy się błędem `Could not download styles.css from your EdgeEver instance`, zainstalowana wersja nie ma pliku `styles.css` w wydaniu na GitHubie. Problem dotyczy wersji 0.1.0 i jest naprawiony od wersji 0.1.1.
 
 ### Konfiguracja: hasło aplikacji
@@ -273,6 +277,7 @@ EdgeEver instaluje pluginy z GitHuba na podstawie `manifest.json` z domyślnej g
 
 ### Historia zmian
 
+- **0.1.8**: Zmiana ID pluginu na `wordpress-publisher`. Wymaga ponownej instalacji i konfiguracji.
 - **0.1.7**: Polski opis w dokumentacji.
 - **0.1.6**: Okno harmonogramu pokazuje błąd, gdy nie ma powiązanej notatki, zamiast nic nie robić.
 - **0.1.5**: Stałe wersje Bun w CI i przy wydaniach. Wydanie można utworzyć tylko z tagu na domyślnej gałęzi.
@@ -308,6 +313,8 @@ Kod zewnętrzny w paczce: [marked](https://github.com/markedjs/marked) (MIT). Je
 1. 在 EdgeEver 中打开 **插件市场** 页面。
 2. 粘贴仓库地址，例如 `https://github.com/dkoryto/edgeever-wordpress-publisher`，然后安装。
 3. 确认社区插件信任提示，并启用插件。
+
+从 0.1.7 或更早版本升级：0.1.8 将插件 ID 从 `com.silevis.wordpress-publisher` 改为 `wordpress-publisher`，EdgeEver 会将其视为新插件。请卸载旧版本，安装 0.1.8 并重新填写设置。旧版本发布过的笔记不再与对应文章关联，再次发布会创建新文章。
 
 ### 配置：创建应用程序密码
 
